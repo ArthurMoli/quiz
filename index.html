@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Angular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            margin: 5px 0;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz Angular</h1>
+        <div id="quiz">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "O que o Angular faz para os websites?",
+                options: ["Torna-os mais coloridos", "Faz com que carreguem mais rápido", "Torna-os mais inteligentes e interativos", "Adiciona música de fundo"],
+                correctAnswer: "Torna-os mais inteligentes e interativos"
+            },
+            {
+                question: "Angular é mais parecido com qual parte de uma construção?",
+                options: ["Os tijolos", "A pintura", "O arquiteto e o sistema elétrico", "O jardim"],
+                correctAnswer: "O arquiteto e o sistema elétrico"
+            },
+            {
+                question: "Qual é a principal função do Angular?",
+                options: ["Manipulação de banco de dados", "Criação de aplicações web de página única (SPA)", "Desenvolvimento de jogos", "Otimização de mecanismos de busca"],
+                correctAnswer: "Criação de aplicações web de página única (SPA)"
+            },
+            {
+                question: "O que são componentes no Angular?",
+                options: ["Partes do banco de dados", "Blocos de construção reutilizáveis da interface do usuário", "Bibliotecas de terceiros", "Arquivos de configuração"],
+                correctAnswer: "Blocos de construção reutilizáveis da interface do usuário"
+            },
+            {
+                question: "Qual é a linguagem de programação principal usada no Angular?",
+                options: ["JavaScript", "Python", "TypeScript", "Java"],
+                correctAnswer: "TypeScript"
+            },
+            {
+                question: "O que é o 'data binding' no Angular?",
+                options: ["Um tipo de banco de dados", "Uma técnica para conectar dados do componente ao template", "Um método de criptografia", "Um plugin de terceiros"],
+                correctAnswer: "Uma técnica para conectar dados do componente ao template"
+            },
+            {
+                question: "Qual é a função dos serviços no Angular?",
+                options: ["Renderizar a interface do usuário", "Gerenciar a lógica de negócios e compartilhar dados", "Criar animações", "Otimizar o carregamento de páginas"],
+                correctAnswer: "Gerenciar a lógica de negócios e compartilhar dados"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const questionElement = document.getElementById('question');
+            const optionsElement = document.getElementById('options');
+            const currentQuizData = quizData[currentQuestion];
+
+            questionElement.innerText = currentQuizData.question;
+            optionsElement.innerHTML = '';
+
+            currentQuizData.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.addEventListener('click', () => selectAnswer(option));
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function selectAnswer(selectedOption) {
+            const currentQuizData = quizData[currentQuestion];
+            const feedbackElement = document.getElementById('feedback');
+
+            if (selectedOption === currentQuizData.correctAnswer) {
+                feedbackElement.innerText = 'Correto!';
+                feedbackElement.className = 'feedback correct';
+                score++;
+            } else {
+                feedbackElement.innerText = `Incorreto. A resposta certa é: ${currentQuizData.correctAnswer}`;
+                feedbackElement.className = 'feedback incorrect';
+            }
+
+            document.getElementById('options').style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    loadQuestion();
+                    feedbackElement.innerText = '';
+                    document.getElementById('options').style.pointerEvents = 'auto';
+                } else {
+                    showResults();
+                }
+            }, 2000);
+        }
+
+        function showResults() {
+            const quizElement = document.getElementById('quiz');
+            const resultElement = document.getElementById('result');
+            quizElement.style.display = 'none';
+            resultElement.innerText = `Quiz finalizado! Sua pontuação: ${score}/${quizData.length}`;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
